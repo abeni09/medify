@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram Web App</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Telegram Web App Test</h1>
+    <div id="user-info">
+        <p id="user-status">Loading user info...</p>
+        <p id="user-id"></p>
+        <p id="user-name"></p>
+    </div>
+    <script>
+        const tg = window.Telegram.WebApp;
+
+        tg.ready();
+
+        // Alert when the Web App is ready
+        alert('Telegram Web App is ready.');
+
+        tg.onEvent('initData', () => {
+            alert('InitData event received.');
+            
+            const userStatus = document.getElementById('user-status');
+            const userIdElement = document.getElementById('user-id');
+            const userNameElement = document.getElementById('user-name');
+
+            if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+                userStatus.textContent = 'User is logged in';
+                userIdElement.textContent = 'User ID: ' + tg.initDataUnsafe.user.id;
+                userNameElement.textContent = 'User Name: ' + tg.initDataUnsafe.user.first_name;
+            } else {
+                userStatus.textContent = 'User is not logged in';
+            }
+        });
+
+        // Alert fallback to check data
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                alert('Checking user info...');
+                const userStatus = document.getElementById('user-status');
+                const userIdElement = document.getElementById('user-id');
+                const userNameElement = document.getElementById('user-name');
+
+                if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+                    alert('User data found.');
+                    userStatus.textContent = 'User is logged in';
+                    userIdElement.textContent = 'User ID: ' + tg.initDataUnsafe.user.id;
+                    userNameElement.textContent = 'User Name: ' + tg.initDataUnsafe.user.first_name;
+                } else {
+                    alert('No user data found.');
+                    userStatus.textContent = 'User is not logged in';
+                }
+            }, 1000); // Retry after 1 second
+        });
+    </script>
+</body>
+</html>
